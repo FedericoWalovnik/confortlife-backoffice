@@ -1,16 +1,9 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  background-color: rgba(33,73,130, 0.08);
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 .App-header {

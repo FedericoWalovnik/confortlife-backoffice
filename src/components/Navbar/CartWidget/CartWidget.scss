@@ -1,0 +1,26 @@
+@import '../../../variables.scss';
+
+.CartWidget {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &__counter-container {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: -5px;
+        right: -12px;
+        background-color: $accent-color-1;
+        margin: 0;
+        color: #fff;
+        font-size: .8rem;
+        font-weight: 700;
+        padding: .5rem;
+        height: 19px;
+        width: 19px;
+        border-radius: 100%;
+        font-size: 1.1rem;
+    }
+}

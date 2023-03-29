@@ -1,0 +1,14 @@
+.productList__img {
+    height: 50px;
+}
+
+.ProductList {
+    &__description {
+        width: 30% !important;
+    }
+
+    &__edit-button svg{
+        cursor: pointer !important;
+        margin-left: 1rem;
+    }
+}
