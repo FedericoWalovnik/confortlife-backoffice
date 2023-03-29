@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
@@ -98,14 +98,7 @@ const CrudActions = () => {
 
       uploadTask.on(
         'state_changed',
-        snapshot => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred /
-              snapshot.totalBytes) *
-              100
-          )
-          // setProgresspercent(progress);
-        },
+        snapshot => {},
         error => {
           console.log('error', error)
         },
