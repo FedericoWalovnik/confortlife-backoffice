@@ -74,4 +74,11 @@
       color: #000;
     }
   }
+
+  &__logout-button {
+    border: none;
+    padding: 0.5rem 2rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+  }
 }

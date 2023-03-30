@@ -30,7 +30,12 @@ const Navbar = () => {
       </div>
       {location.pathname === '/home' ? (
         <div className="navbar__actions">
-          <button onClick={handleLogout}>Logout</button>
+          <button
+            className="navbar__logout-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       ) : (
         <></>
