@@ -5,6 +5,8 @@ import React, {
 } from 'react'
 import { useNotificationsContext } from './NotificationsContext'
 
+import config from '../config.js'
+
 export const ProductsContext = createContext()
 
 export function useProductsContext() {
@@ -30,7 +32,7 @@ export const ProductsProvider = ({ children }) => {
 
   const getProducts = async () => {
     try {
-      const products = await fetch(`/api`)
+      const products = await fetch(`${config.url}/api`)
       const parsedProducts = await products.json()
       setProductList(parsedProducts)
     } catch (err) {
@@ -42,7 +44,7 @@ export const ProductsProvider = ({ children }) => {
   const getProduct = async productId => {
     try {
       const product = await fetch(
-        `/api/product/${productId}`
+        `${config.url}/api/product/${productId}`
       )
       const productParsed = await product.json()
       setProductName(productParsed.title)

@@ -15,6 +15,8 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { useProductsContext } from '../../context/ProductsContext'
 import { useNotificationsContext } from '../../context/NotificationsContext'
 
+import config from '../../config.js'
+
 import './ProductsList.scss'
 
 export default function BasicTable() {
@@ -46,9 +48,12 @@ export default function BasicTable() {
   const handleClickDelete = async productId => {
     try {
       setOpenErrorAlert(false)
-      await fetch(`/api/deleteProduct/${productId}`, {
-        method: 'DELETE'
-      })
+      await fetch(
+        `${config.url}/api/deleteProduct/${productId}`,
+        {
+          method: 'DELETE'
+        }
+      )
       getProducts()
     } catch (error) {
       setOpenNotification(true)

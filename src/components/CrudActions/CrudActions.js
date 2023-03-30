@@ -16,6 +16,8 @@ import './CrudActions.scss'
 import { v4 as uuidv4 } from 'uuid'
 import { useProductsContext } from '../../context/ProductsContext'
 
+import config from '../../config.js'
+
 const CrudActions = () => {
   const {
     productName,
@@ -65,7 +67,7 @@ const CrudActions = () => {
     }
 
     if (operation === 'create') {
-      await fetch('/api/createProduct', {
+      await fetch(`${config.url}/api/createProduct`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -74,14 +76,17 @@ const CrudActions = () => {
         body: JSON.stringify(order)
       })
     } else {
-      await fetch(`/api/editProduct/${order.id}`, {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(order)
-      })
+      await fetch(
+        `${config.url}/api/editProduct/${order.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(order)
+        }
+      )
     }
 
     resetValues()
