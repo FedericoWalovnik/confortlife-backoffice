@@ -1,8 +1,43 @@
-.CrudActions__buttons {
+@import '../../variables.scss';
 
-    & button {
-        font-size: 16px !important;
-        height: 2.4rem !important;
-        margin-bottom: 1rem;
+.CrudActions {
+  &__preview {
+    display: flex;
+    border: 1px solid $grey-text;
+    padding: 0.8rem 2rem;
+    width: fit-content;
+    margin: 1rem;
+    border-radius: 10px;
+    align-items: center;
+
+    & img {
+      height: 60px;
     }
+
+    &-text {
+      margin-left: 1rem;
+    }
+
+    &-delete {
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      background-color: $grey-borders;
+      line-height: 1;
+      padding: 0.3rem;
+      border-radius: 100px;
+      height: 22px;
+      width: 22px;
+      text-align: center;
+      justify-content: center;
+      margin-left: 1rem;
+      cursor: pointer;
+    }
+  }
+
+  &__buttons button {
+    font-size: 16px !important;
+    height: 2.4rem !important;
+    margin-bottom: 1rem;
+  }
 }

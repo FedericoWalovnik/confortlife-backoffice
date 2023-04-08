@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
@@ -19,17 +19,19 @@ import { useProductsContext } from '../../context/ProductsContext'
 import config from '../../config.js'
 
 const CrudActions = () => {
+  const [showImgInput, setShowImgInput] = useState(true)
+
   const {
     productName,
     category,
     description,
-    img,
+    images,
     id,
     price,
     setProductName,
     setCategory,
     setDescription,
-    setImg,
+    setImages,
     setPrice,
     openProductForm,
     setOpenProductForm,
@@ -51,18 +53,18 @@ const CrudActions = () => {
   const resetValues = () => {
     setProductName('')
     setCategory('')
-    setImg('')
+    setImages([])
     setDescription('')
     setPrice(0)
   }
 
-  const sendRequest = async (downloadURL = img) => {
+  const sendRequest = async (imagesDownloadURL = []) => {
     const order = {
       id: operation === 'create' ? uuidv4() : id,
       category: category,
       description: description,
-      image: downloadURL,
-      price: price,
+      images: imagesDownloadURL,
+      price: price ? price : 0,
       title: productName
     }
 
@@ -93,28 +95,51 @@ const CrudActions = () => {
     getProducts()
   }
 
-  const saveProduct = async () => {
-    if (img.name) {
-      const storageRef = ref(storage, `files/${img.name}`)
-      const uploadTask = uploadBytesResumable(
-        storageRef,
-        img
-      )
+  const getImgUrl = async img => {
+    const storageRef = ref(storage, `files/${img.name}`)
+    const uploadTask = uploadBytesResumable(storageRef, img)
+    console.log(img, storageRef, uploadTask)
 
+    return new Promise((resolve, reject) => {
       uploadTask.on(
         'state_changed',
         snapshot => {},
         error => {
           console.log('error', error)
+          reject(error)
         },
         async () => {
-          await getDownloadURL(
-            uploadTask.snapshot.ref
-          ).then(downloadURL => {
-            sendRequest(downloadURL)
-          })
+          try {
+            const downloadURL = await getDownloadURL(
+              uploadTask.snapshot.ref
+            )
+            console.log(downloadURL)
+            resolve(downloadURL)
+          } catch (error) {
+            reject(error)
+          }
         }
       )
+    })
+  }
+
+  const saveProduct = async () => {
+    let imagesUrl = []
+
+    if (images.length) {
+      console.log(images)
+      imagesUrl = await Promise.all(
+        images.map(async img => {
+          return {
+            id: img.id,
+            name: img.name,
+            url: img.url
+              ? img.url
+              : await getImgUrl(img.file)
+          }
+        })
+      )
+      sendRequest(imagesUrl)
     } else {
       sendRequest()
     }
@@ -122,6 +147,31 @@ const CrudActions = () => {
     await getProducts()
     handleClose()
   }
+
+  const addPendingImage = e => {
+    const newImg = {
+      id: Date.now(),
+      name: e.target.files[0].name,
+      preview: URL.createObjectURL(e.target.files[0]),
+      file: e.target.files[0]
+    }
+
+    setImages([...images, newImg])
+  }
+
+  const removePendingImage = id => {
+    const updatedItems = images.filter(
+      item => item.id !== id
+    )
+
+    setImages(updatedItems)
+  }
+
+  useEffect(() => {
+    images.length < 4
+      ? setShowImgInput(true)
+      : setShowImgInput(false)
+  }, [images])
 
   return (
     <div>
@@ -179,18 +229,42 @@ const CrudActions = () => {
             value={description}
             onChange={e => setDescription(e.target.value)}
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="mainImage"
-            label="Imagen"
-            accept=".png, .jpg, .jpeg"
-            type="file"
-            fullWidth
-            variant="outlined"
-            required
-            onChange={e => setImg(e.target.files[0])}
-          />
+          {images.map(img => (
+            <div
+              className="CrudActions__preview"
+              key={img.id}
+            >
+              <img
+                src={img.preview ? img.preview : img.url}
+                alt={img.name}
+              />
+              <p className="CrudActions__preview-text">
+                {img.name}
+              </p>
+              <p
+                className="CrudActions__preview-delete"
+                onClick={() => removePendingImage(img.id)}
+              >
+                x
+              </p>
+            </div>
+          ))}
+          {showImgInput ? (
+            <TextField
+              autoFocus
+              margin="dense"
+              id="mainImage"
+              label="Imagen"
+              accept=".png, .jpg, .jpeg"
+              type="file"
+              fullWidth
+              variant="outlined"
+              required
+              onChange={e => addPendingImage(e)}
+            />
+          ) : (
+            <></>
+          )}
           <TextField
             autoFocus
             margin="dense"

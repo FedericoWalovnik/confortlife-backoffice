@@ -61,8 +61,6 @@ export default function BasicTable() {
   }
 
   useEffect(() => {
-    console.log('productList changed')
-
     getProducts()
   }, [])
 
@@ -126,7 +124,7 @@ export default function BasicTable() {
                 <TableCell align="right">
                   <img
                     className="productList__img"
-                    src={row.image}
+                    src={row.images[0].url}
                     alt={row.title}
                   />
                 </TableCell>

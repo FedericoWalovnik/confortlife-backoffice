@@ -21,7 +21,9 @@ export const ProductsProvider = ({ children }) => {
   const [productName, setProductName] = useState('')
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
-  const [img, setImg] = useState({})
+
+  const [images, setImages] = useState([])
+
   const [id, setId] = useState({})
 
   const [price, setPrice] = useState('')
@@ -50,7 +52,7 @@ export const ProductsProvider = ({ children }) => {
       setProductName(productParsed.title)
       setCategory(productParsed.category)
       setDescription(productParsed.description)
-      setImg(productParsed.image)
+      setImages(productParsed.images)
       setPrice(productParsed.price)
       setId(productParsed.id)
     } catch (error) {
@@ -64,14 +66,14 @@ export const ProductsProvider = ({ children }) => {
         productName,
         category,
         description,
-        img,
+        images,
         price,
         id,
         productList,
         setProductName,
         setCategory,
         setDescription,
-        setImg,
+        setImages,
         setPrice,
         getProducts,
         getProduct,
