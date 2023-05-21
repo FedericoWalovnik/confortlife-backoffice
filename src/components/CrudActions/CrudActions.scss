@@ -35,6 +35,19 @@
     }
   }
 
+  &__category-select {
+    width: 300px;
+    margin: 0.5rem 0;
+
+    & div {
+      width: 100%;
+    }
+  }
+
+  &__error {
+    color: red;
+  }
+
   &__buttons button {
     font-size: 16px !important;
     height: 2.4rem !important;

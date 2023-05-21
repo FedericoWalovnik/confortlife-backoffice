@@ -27,6 +27,7 @@ export const ProductsProvider = ({ children }) => {
   const [id, setId] = useState({})
 
   const [price, setPrice] = useState('')
+  const [destacado, setDestacado] = useState('noDestacado')
 
   const { setOpenNotification } = useNotificationsContext()
 
@@ -68,6 +69,7 @@ export const ProductsProvider = ({ children }) => {
         description,
         images,
         price,
+        destacado,
         id,
         productList,
         setProductName,
@@ -75,6 +77,7 @@ export const ProductsProvider = ({ children }) => {
         setDescription,
         setImages,
         setPrice,
+        setDestacado,
         getProducts,
         getProduct,
         openProductForm,

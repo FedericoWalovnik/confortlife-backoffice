@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
 import Dialog from '@mui/material/Dialog'
+import InputLabel from '@mui/material/InputLabel'
+import Select from '@mui/material/Select'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormLabel from '@mui/material/FormLabel'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import storage from '../../firebaseConfig.js'
 import {
@@ -20,6 +26,7 @@ import config from '../../config.js'
 
 const CrudActions = () => {
   const [showImgInput, setShowImgInput] = useState(true)
+  const [crudError, setCrudError] = useState('')
 
   const {
     productName,
@@ -28,11 +35,13 @@ const CrudActions = () => {
     images,
     id,
     price,
+    destacado,
     setProductName,
     setCategory,
     setDescription,
     setImages,
     setPrice,
+    setDestacado,
     openProductForm,
     setOpenProductForm,
     operation,
@@ -58,9 +67,32 @@ const CrudActions = () => {
     setPrice(0)
   }
 
+  const addDestacado = async productId => {
+    if (destacado === 'superDestacado') {
+      await fetch(`${config.url}/api/addSuperDestacado`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productId)
+      })
+    } else if (destacado === 'destacado') {
+      await fetch(`${config.url}/api/addDestacado`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productId)
+      })
+    }
+  }
+
   const sendRequest = async (imagesDownloadURL = []) => {
+    const productId = operation === 'create' ? uuidv4() : id
     const order = {
-      id: operation === 'create' ? uuidv4() : id,
+      id: productId,
       category: category,
       description: description,
       images: imagesDownloadURL,
@@ -91,14 +123,15 @@ const CrudActions = () => {
       )
     }
 
+    await addDestacado(productId)
+
     resetValues()
-    getProducts()
+    await getProducts()
   }
 
   const getImgUrl = async img => {
     const storageRef = ref(storage, `files/${img.name}`)
     const uploadTask = uploadBytesResumable(storageRef, img)
-    console.log(img, storageRef, uploadTask)
 
     return new Promise((resolve, reject) => {
       uploadTask.on(
@@ -123,29 +156,46 @@ const CrudActions = () => {
     })
   }
 
+  const isFormValid = () => {
+    if (
+      !productName.length ||
+      !category.length ||
+      images.length <= 0
+    ) {
+      setCrudError(
+        'Debes completar los campos obligatorios'
+      )
+      return false
+    } else {
+      setCrudError('')
+      return true
+    }
+  }
+
   const saveProduct = async () => {
     let imagesUrl = []
 
-    if (images.length) {
-      console.log(images)
-      imagesUrl = await Promise.all(
-        images.map(async img => {
-          return {
-            id: img.id,
-            name: img.name,
-            url: img.url
-              ? img.url
-              : await getImgUrl(img.file)
-          }
-        })
-      )
-      sendRequest(imagesUrl)
-    } else {
-      sendRequest()
+    if (isFormValid()) {
+      if (images.length) {
+        imagesUrl = await Promise.all(
+          images.map(async img => {
+            return {
+              id: img.id,
+              name: img.name,
+              url: img.url
+                ? img.url
+                : await getImgUrl(img.file)
+            }
+          })
+        )
+        sendRequest(imagesUrl)
+      } else {
+        sendRequest()
+      }
+      handleClose()
     }
 
     await getProducts()
-    handleClose()
   }
 
   const addPendingImage = e => {
@@ -192,9 +242,6 @@ const CrudActions = () => {
       >
         <DialogTitle>Guardar nuevo producto</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Agregar un nuevo producto
-          </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -202,21 +249,38 @@ const CrudActions = () => {
             label="Nombre del producto"
             type="text"
             fullWidth
+            required
             variant="outlined"
             value={productName}
             onChange={e => setProductName(e.target.value)}
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="category"
-            label="Categoria"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-          />
+          <div className="CrudActions__category-select">
+            <InputLabel id="category-label">
+              Category *
+            </InputLabel>
+
+            <Select
+              labelId="category-label"
+              id="category"
+              label="Categoria"
+              value={category}
+              required={true}
+              onChange={e => setCategory(e.target.value)}
+            >
+              <MenuItem value="Colchones">
+                Colchones
+              </MenuItem>
+              <MenuItem value="Almohadas">
+                Almohadas
+              </MenuItem>
+              <MenuItem value="AlmohadonesOrtopedicos">
+                Almohadones Ortopedicos
+              </MenuItem>
+              <MenuItem value="Mascotas">Mascotas</MenuItem>
+              <MenuItem value="Confort">Confort</MenuItem>
+            </Select>
+          </div>
+
           <TextField
             autoFocus
             margin="dense"
@@ -254,7 +318,6 @@ const CrudActions = () => {
               autoFocus
               margin="dense"
               id="mainImage"
-              label="Imagen"
               accept=".png, .jpg, .jpeg"
               type="file"
               fullWidth
@@ -277,6 +340,43 @@ const CrudActions = () => {
               setPrice(parseInt(e.target.value))
             }}
           />
+          <div>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Destacado
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+              value={destacado}
+              // onChange={e => {
+              //   setDestacado(e.target.value)
+              // }}
+            >
+              <FormControlLabel
+                value="noDestacado"
+                control={<Radio />}
+                label="No Destacado"
+              />
+              <FormControlLabel
+                value="Destacado"
+                control={<Radio />}
+                label="Destacado"
+              />
+              <FormControlLabel
+                value="superDestacado"
+                control={<Radio />}
+                label="Super Destacado"
+              />
+            </RadioGroup>
+          </div>
+          {crudError ? (
+            <p className="CrudActions__error">
+              {crudError}
+            </p>
+          ) : (
+            <></>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>

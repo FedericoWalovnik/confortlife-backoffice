@@ -121,13 +121,23 @@ export default function BasicTable() {
                 <TableCell align="right">
                   {row.price}
                 </TableCell>
-                <TableCell align="right">
-                  <img
-                    className="productList__img"
-                    src={row.images[0].url}
-                    alt={row.title}
-                  />
-                </TableCell>
+                {row.images[0] ? (
+                  <TableCell align="right">
+                    <img
+                      className="productList__img"
+                      src={row.images[0].url}
+                      alt={row.title}
+                    />
+                  </TableCell>
+                ) : (
+                  <TableCell align="right">
+                    <img
+                      className="productList__img"
+                      src="images/noImg.jpeg"
+                      alt="no available"
+                    />
+                  </TableCell>
+                )}
                 <TableCell
                   align="right"
                   className="ProductList__edit-button"
