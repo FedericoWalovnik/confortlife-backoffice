@@ -13,11 +13,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import storage from '../../firebaseConfig.js'
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable
-} from 'firebase/storage'
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import './CrudActions.scss'
 import { v4 as uuidv4 } from 'uuid'
 import { useProductsContext } from '../../context/ProductsContext'
@@ -110,17 +106,14 @@ const CrudActions = () => {
         body: JSON.stringify(order)
       })
     } else {
-      await fetch(
-        `${config.url}/api/editProduct/${order.id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(order)
-        }
-      )
+      await fetch(`${config.url}/api/editProduct/${order.id}`, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(order)
+      })
     }
 
     await addDestacado(productId)
@@ -143,9 +136,7 @@ const CrudActions = () => {
         },
         async () => {
           try {
-            const downloadURL = await getDownloadURL(
-              uploadTask.snapshot.ref
-            )
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
             console.log(downloadURL)
             resolve(downloadURL)
           } catch (error) {
@@ -157,14 +148,8 @@ const CrudActions = () => {
   }
 
   const isFormValid = () => {
-    if (
-      !productName.length ||
-      !category.length ||
-      images.length <= 0
-    ) {
-      setCrudError(
-        'Debes completar los campos obligatorios'
-      )
+    if (!productName.length || !category.length || images.length <= 0) {
+      setCrudError('Debes completar los campos obligatorios')
       return false
     } else {
       setCrudError('')
@@ -182,9 +167,7 @@ const CrudActions = () => {
             return {
               id: img.id,
               name: img.name,
-              url: img.url
-                ? img.url
-                : await getImgUrl(img.file)
+              url: img.url ? img.url : await getImgUrl(img.file)
             }
           })
         )
@@ -210,17 +193,13 @@ const CrudActions = () => {
   }
 
   const removePendingImage = id => {
-    const updatedItems = images.filter(
-      item => item.id !== id
-    )
+    const updatedItems = images.filter(item => item.id !== id)
 
     setImages(updatedItems)
   }
 
   useEffect(() => {
-    images.length < 4
-      ? setShowImgInput(true)
-      : setShowImgInput(false)
+    images.length < 4 ? setShowImgInput(true) : setShowImgInput(false)
   }, [images])
 
   return (
@@ -255,9 +234,7 @@ const CrudActions = () => {
             onChange={e => setProductName(e.target.value)}
           />
           <div className="CrudActions__category-select">
-            <InputLabel id="category-label">
-              Category *
-            </InputLabel>
+            <InputLabel id="category-label">Category *</InputLabel>
 
             <Select
               labelId="category-label"
@@ -267,17 +244,17 @@ const CrudActions = () => {
               required={true}
               onChange={e => setCategory(e.target.value)}
             >
-              <MenuItem value="Colchones">
-                Colchones
-              </MenuItem>
-              <MenuItem value="Almohadas">
-                Almohadas
-              </MenuItem>
-              <MenuItem value="AlmohadonesOrtopedicos">
-                Almohadones Ortopedicos
-              </MenuItem>
+              <MenuItem value="Colchones">Colchones</MenuItem>
+              <MenuItem value="ColchonesEspuma">Colchones Espuma</MenuItem>
+              <MenuItem value="ColchonesResortes">Colchones Resortes</MenuItem>
+              <MenuItem value="Sommiers">Sommiers</MenuItem>
+              <MenuItem value="PillowTop">Pillow Top</MenuItem>
+              <MenuItem value="Confort">Confort</MenuItem>
+              <MenuItem value="Almohadas">Almohadas</MenuItem>
+              <MenuItem value="AlmohadonesOrtopedicos">Almohadones Ortopedicos</MenuItem>
               <MenuItem value="Mascotas">Mascotas</MenuItem>
               <MenuItem value="Confort">Confort</MenuItem>
+              <MenuItem value="Accesorios">Accesorios</MenuItem>
             </Select>
           </div>
 
@@ -302,9 +279,7 @@ const CrudActions = () => {
                 src={img.preview ? img.preview : img.url}
                 alt={img.name}
               />
-              <p className="CrudActions__preview-text">
-                {img.name}
-              </p>
+              <p className="CrudActions__preview-text">{img.name}</p>
               <p
                 className="CrudActions__preview-delete"
                 onClick={() => removePendingImage(img.id)}
@@ -341,9 +316,7 @@ const CrudActions = () => {
             }}
           />
           <div>
-            <FormLabel id="demo-row-radio-buttons-group-label">
-              Destacado
-            </FormLabel>
+            <FormLabel id="demo-row-radio-buttons-group-label">Destacado</FormLabel>
             <RadioGroup
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
@@ -370,13 +343,7 @@ const CrudActions = () => {
               />
             </RadioGroup>
           </div>
-          {crudError ? (
-            <p className="CrudActions__error">
-              {crudError}
-            </p>
-          ) : (
-            <></>
-          )}
+          {crudError ? <p className="CrudActions__error">{crudError}</p> : <></>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
