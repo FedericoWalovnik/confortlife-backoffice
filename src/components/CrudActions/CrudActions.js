@@ -203,154 +203,155 @@ const CrudActions = () => {
   }, [images])
 
   return (
-    <div>
-      <div className="CrudActions__buttons">
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={handleClickOpen}
-        >
-          Crear un nuevo producto
-        </Button>
-      </div>
-      <Dialog
-        open={openProductForm}
-        onClose={handleClose}
-        fullWidth={true}
-        maxWidth={'md'}
-      >
-        <DialogTitle>Guardar nuevo producto</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="title"
-            label="Nombre del producto"
-            type="text"
-            fullWidth
-            required
-            variant="outlined"
-            value={productName}
-            onChange={e => setProductName(e.target.value)}
-          />
-          <div className="CrudActions__category-select">
-            <InputLabel id="category-label">Category *</InputLabel>
-
-            <Select
-              labelId="category-label"
-              id="category"
-              label="Categoria"
-              value={category}
-              required={true}
-              onChange={e => setCategory(e.target.value)}
-            >
-              <MenuItem value="Colchones">Colchones</MenuItem>
-              <MenuItem value="ColchonesEspuma">Colchones Espuma</MenuItem>
-              <MenuItem value="ColchonesResortes">Colchones Resortes</MenuItem>
-              <MenuItem value="Sommiers">Sommiers</MenuItem>
-              <MenuItem value="PillowTop">Pillow Top</MenuItem>
-              <MenuItem value="Confort">Confort</MenuItem>
-              <MenuItem value="Almohadas">Almohadas</MenuItem>
-              <MenuItem value="AlmohadonesOrtopedicos">Almohadones Ortopedicos</MenuItem>
-              <MenuItem value="Mascotas">Mascotas</MenuItem>
-              <MenuItem value="Confort">Confort</MenuItem>
-              <MenuItem value="Accesorios">Accesorios</MenuItem>
-            </Select>
-          </div>
-
-          <TextField
-            autoFocus
-            margin="dense"
-            id="description"
-            label="Descripcion"
-            type="text"
-            fullWidth
-            multiline
-            variant="outlined"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-          />
-          {images.map(img => (
-            <div
-              className="CrudActions__preview"
-              key={img.id}
-            >
-              <img
-                src={img.preview ? img.preview : img.url}
-                alt={img.name}
-              />
-              <p className="CrudActions__preview-text">{img.name}</p>
-              <p
-                className="CrudActions__preview-delete"
-                onClick={() => removePendingImage(img.id)}
+      <div>
+          <div className="CrudActions__buttons">
+              <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleClickOpen}
               >
-                x
-              </p>
-            </div>
-          ))}
-          {showImgInput ? (
-            <TextField
-              autoFocus
-              margin="dense"
-              id="mainImage"
-              accept=".png, .jpg, .jpeg"
-              type="file"
-              fullWidth
-              variant="outlined"
-              required
-              onChange={e => addPendingImage(e)}
-            />
-          ) : (
-            <></>
-          )}
-          <TextField
-            autoFocus
-            margin="dense"
-            id="price"
-            label="Precio"
-            type="number"
-            variant="outlined"
-            value={price}
-            onChange={e => {
-              setPrice(parseInt(e.target.value))
-            }}
-          />
-          <div>
-            <FormLabel id="demo-row-radio-buttons-group-label">Destacado</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              value={destacado}
-              // onChange={e => {
-              //   setDestacado(e.target.value)
-              // }}
-            >
-              <FormControlLabel
-                value="noDestacado"
-                control={<Radio />}
-                label="No Destacado"
-              />
-              <FormControlLabel
-                value="Destacado"
-                control={<Radio />}
-                label="Destacado"
-              />
-              <FormControlLabel
-                value="superDestacado"
-                control={<Radio />}
-                label="Super Destacado"
-              />
-            </RadioGroup>
+                  Crear un nuevo producto
+              </Button>
           </div>
-          {crudError ? <p className="CrudActions__error">{crudError}</p> : <></>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={saveProduct}>Guardar</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+          <Dialog
+              open={openProductForm}
+              onClose={handleClose}
+              fullWidth={true}
+              maxWidth={'md'}
+          >
+              <DialogTitle>Guardar nuevo producto</DialogTitle>
+              <DialogContent>
+                  <TextField
+                      autoFocus
+                      margin="dense"
+                      id="title"
+                      label="Nombre del producto"
+                      type="text"
+                      fullWidth
+                      required
+                      variant="outlined"
+                      value={productName}
+                      onChange={e => setProductName(e.target.value)}
+                  />
+                  <div className="CrudActions__category-select">
+                      <InputLabel id="category-label">Category *</InputLabel>
+
+                      <Select
+                          labelId="category-label"
+                          id="category"
+                          label="Categoria"
+                          value={category}
+                          required={true}
+                          onChange={e => setCategory(e.target.value)}
+                      >
+                          <MenuItem value="Colchones">Colchones</MenuItem>
+                          <MenuItem value="ColchonesEspuma">Colchones Espuma</MenuItem>
+                          <MenuItem value="ColchonesResortes">Colchones Resortes</MenuItem>
+                          <MenuItem value="Sommiers">Sommiers</MenuItem>
+                          <MenuItem value="PillowTop">Pillow Top</MenuItem>
+                          <MenuItem value="Confort">Confort</MenuItem>
+                          <MenuItem value="Almohadas">Almohadas</MenuItem>
+                          <MenuItem value="AlmohadonesOrtopedicos">Almohadones Ortopedicos</MenuItem>
+                          <MenuItem value="Mascotas">Mascotas</MenuItem>
+                          <MenuItem value="PlacaEspuma">Placas de Espuma</MenuItem>
+                          <MenuItem value="Confort">Confort</MenuItem>
+                          <MenuItem value="Accesorios">Accesorios</MenuItem>
+                      </Select>
+                  </div>
+
+                  <TextField
+                      autoFocus
+                      margin="dense"
+                      id="description"
+                      label="Descripcion"
+                      type="text"
+                      fullWidth
+                      multiline
+                      variant="outlined"
+                      value={description}
+                      onChange={e => setDescription(e.target.value)}
+                  />
+                  {images.map(img => (
+                      <div
+                          className="CrudActions__preview"
+                          key={img.id}
+                      >
+                          <img
+                              src={img.preview ? img.preview : img.url}
+                              alt={img.name}
+                          />
+                          <p className="CrudActions__preview-text">{img.name}</p>
+                          <p
+                              className="CrudActions__preview-delete"
+                              onClick={() => removePendingImage(img.id)}
+                          >
+                              x
+                          </p>
+                      </div>
+                  ))}
+                  {showImgInput ? (
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="mainImage"
+                          accept=".png, .jpg, .jpeg"
+                          type="file"
+                          fullWidth
+                          variant="outlined"
+                          required
+                          onChange={e => addPendingImage(e)}
+                      />
+                  ) : (
+                      <></>
+                  )}
+                  <TextField
+                      autoFocus
+                      margin="dense"
+                      id="price"
+                      label="Precio"
+                      type="number"
+                      variant="outlined"
+                      value={price}
+                      onChange={e => {
+                          setPrice(parseInt(e.target.value))
+                      }}
+                  />
+                  <div>
+                      <FormLabel id="demo-row-radio-buttons-group-label">Destacado</FormLabel>
+                      <RadioGroup
+                          row
+                          aria-labelledby="demo-row-radio-buttons-group-label"
+                          name="row-radio-buttons-group"
+                          value={destacado}
+                          // onChange={e => {
+                          //   setDestacado(e.target.value)
+                          // }}
+                      >
+                          <FormControlLabel
+                              value="noDestacado"
+                              control={<Radio />}
+                              label="No Destacado"
+                          />
+                          <FormControlLabel
+                              value="Destacado"
+                              control={<Radio />}
+                              label="Destacado"
+                          />
+                          <FormControlLabel
+                              value="superDestacado"
+                              control={<Radio />}
+                              label="Super Destacado"
+                          />
+                      </RadioGroup>
+                  </div>
+                  {crudError ? <p className="CrudActions__error">{crudError}</p> : <></>}
+              </DialogContent>
+              <DialogActions>
+                  <Button onClick={handleClose}>Cancelar</Button>
+                  <Button onClick={saveProduct}>Guardar</Button>
+              </DialogActions>
+          </Dialog>
+      </div>
   )
 }
 
